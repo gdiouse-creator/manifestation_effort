@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>努力顯化診斷｜你的努力，兌現了嗎？</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@700;900&family=Noto+Sans+TC:wght@400;500;700;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#150506;
+    --maroon:#3A0F14;
+    --maroon-2:#4A1A1F;
+    --line:#6B4226;
+    --text:#F2E6CE;
+    --muted:#B79C7A;
+    --gold:#D4AF37;
+    --gold-bright:#F0CB63;
+    --vermilion:#9E2B25;
+    --radius:10px;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html,body{height:100%;}
+  body{
+    background:radial-gradient(circle at 20% -10%, #2A0D10 0%, var(--ink) 55%);
+    color:var(--text);
+    font-family:'Noto Sans TC', sans-serif;
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:24px;
+    line-height:1.6;
+  }
+  .mono{ font-family:'Space Mono', monospace; letter-spacing:0.02em; }
+  .app{
+    position:relative;
+    width:100%;
+    max-width:640px;
+    background:var(--maroon);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    overflow:hidden;
+    box-shadow:0 30px 80px -20px rgba(0,0,0,0.7);
+  }
+  .app::before, .app::after{
+    content:''; position:absolute; width:26px; height:26px; border:2px solid var(--gold); opacity:0.55; pointer-events:none; z-index:2;
+  }
+  .app::before{ top:9px; left:9px; border-right:none; border-bottom:none; }
+  .app::after{ bottom:9px; right:9px; border-left:none; border-top:none; }
+  .screen{ display:none; padding:108px 32px 40px; position:relative; z-index:1; }
+  .screen.active{ display:block; animation:fadeIn 0.4s ease; }
+  @keyframes fadeIn{ from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);} }
+
+  .eyebrow{
+    display:inline-flex; align-items:center; gap:8px;
+    font-family:'Space Mono', monospace; font-size:11px; letter-spacing:0.12em;
+    color:var(--gold); text-transform:uppercase; margin-bottom:18px;
+  }
+  .eyebrow::before{ content:''; width:6px; height:6px; border-radius:50%; background:var(--gold); box-shadow:0 0 8px var(--gold); }
+
+  h1{ font-family:'Noto Serif TC', serif; font-size:28px; font-weight:900; line-height:1.45; margin-bottom:14px; }
+  h1 span{ color:var(--gold-bright); }
+  .lede{ color:var(--muted); font-size:15px; margin-bottom:28px; }
+  .dims{ display:grid; grid-template-columns:repeat(5,1fr); gap:8px; margin-bottom:28px; }
+  .dim-chip{ background:var(--maroon-2); border:1px solid var(--line); border-radius:8px; padding:10px 4px; text-align:center; font-size:11px; color:var(--muted); }
+  .dim-chip-icon{ display:flex; justify-content:center; color:var(--gold); margin-bottom:6px; }
+  .dim-chip b{ display:block; font-family:'Noto Serif TC',serif; color:var(--gold-bright); font-size:15px; margin-bottom:2px; }
+
+  .intro-block{ margin-bottom:20px; }
+  .hero-radar{ display:flex; justify-content:center; margin:6px 0 22px; }
+  .intro-text{ font-size:13.5px; color:var(--muted); line-height:1.8; margin-bottom:8px; }
+  .placeholder-note{ display:inline-block; font-size:11.5px; color:var(--gold); background:rgba(212,175,55,0.1); border:1px dashed var(--line); border-radius:6px; padding:8px 10px; line-height:1.6; }
+  .reframe{ font-family:'Noto Serif TC', serif; font-size:16px; font-weight:700; color:var(--text); margin:24px 0; line-height:1.7; }
+  .unify-q{ font-size:13.5px; color:var(--muted); margin:22px 0; line-height:1.8; }
+  .unify-q b{ color:var(--gold-bright); font-family:'Noto Serif TC',serif; }
+  .divider{ height:1px; background:linear-gradient(90deg, transparent, var(--line), transparent); margin:26px 0; }
+
+  .exclusivity .ex-title{ font-family:'Noto Serif TC',serif; font-weight:900; font-size:15px; color:var(--gold-bright); margin-bottom:16px; }
+  .ex-row{ margin-bottom:16px; font-size:13.5px; color:var(--text); }
+  .ex-row b{ display:block; margin-bottom:8px; color:var(--muted); font-weight:700; font-size:12px; text-transform:uppercase; letter-spacing:0.05em; font-family:'Space Mono',monospace; }
+  .ex-row ul{ list-style:none; display:flex; flex-direction:column; gap:7px; }
+  .ex-row li{ padding-left:20px; position:relative; line-height:1.6; }
+  .ex-row.good li::before{ content:'✓'; position:absolute; left:0; color:var(--gold); }
+  .ex-row.bad li::before{ content:'✕'; position:absolute; left:0; color:var(--muted); }
+
+  .reward-stack .rs-title{ font-family:'Noto Serif TC',serif; font-weight:900; font-size:15px; color:var(--gold-bright); margin-bottom:14px; }
+  .reward-stack ul{ list-style:none; display:flex; flex-direction:column; gap:12px; }
+  .reward-stack li{ font-size:13.5px; color:var(--text); padding-left:26px; position:relative; line-height:1.6; }
+  .reward-stack .rs-icon{ position:absolute; left:0; top:2px; color:var(--gold); display:flex; }
+  .reward-stack li b{ color:var(--gold-bright); }
+
+  .honesty-protocol{ background:var(--maroon-2); border:1px dashed var(--line); border-radius:10px; padding:18px 20px; }
+  .honesty-protocol .hp-title{ display:flex; align-items:center; gap:6px; font-family:'Space Mono',monospace; font-size:11px; color:var(--gold); letter-spacing:0.1em; margin-bottom:10px; }
+  .honesty-protocol .hp-icon{ display:flex; }
+  .honesty-protocol p{ font-size:13px; color:var(--muted); margin-bottom:6px; line-height:1.7; }
+  .honesty-protocol p:last-child{ margin-bottom:0; }
+
+  .logistics{ text-align:center; font-family:'Space Mono',monospace; font-size:11px; color:var(--muted); margin:24px 0 16px; }
+
+  .btn{
+    display:inline-flex; align-items:center; justify-content:center; gap:8px;
+    background:linear-gradient(180deg, var(--gold-bright), var(--gold)); color:#2B1400; font-weight:700; font-size:15px;
+    border:none; border-radius:6px; padding:15px 28px; cursor:pointer;
+    width:100%; transition:transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  .btn:hover{ transform:translateY(-1px); box-shadow:0 10px 24px -8px rgba(212,175,55,0.55); }
+  .btn:active{ transform:translateY(0); }
+  .btn.ghost{ background:transparent; color:var(--text); border:1px solid var(--line); font-weight:500; }
+  .btn.ghost:hover{ border-color:var(--gold); box-shadow:none; }
+  .btn.secondary{ background:var(--maroon-2); color:var(--text); border:1px solid var(--gold); }
+  .btn:disabled{ opacity:0.4; cursor:not-allowed; transform:none; box-shadow:none; }
+
+  .progress-track{ height:4px; background:var(--maroon-2); border-radius:2px; overflow:hidden; margin-bottom:28px; }
+  .progress-fill{ height:100%; background:linear-gradient(90deg, var(--gold), var(--gold-bright)); width:0%; transition:width 0.35s ease; }
+  .q-meta{ display:flex; justify-content:space-between; font-family:'Space Mono',monospace; font-size:11px; color:var(--muted); margin-bottom:10px; text-transform:uppercase; letter-spacing:0.08em; }
+  .q-text{ font-family:'Noto Serif TC', serif; font-size:19px; font-weight:700; margin-bottom:26px; min-height:76px; }
+  .opts{ display:flex; flex-direction:column; gap:10px; }
+  .opt{
+    text-align:left; background:var(--maroon-2); border:1px solid var(--line); color:var(--text);
+    padding:14px 16px; border-radius:8px; cursor:pointer; font-size:14px;
+    display:flex; align-items:center; gap:12px; transition:border-color 0.15s, background 0.15s;
+  }
+  .opt-meter{ display:flex; gap:3px; flex-shrink:0; width:44px; }
+  .opt-meter .dot{ width:6px; height:6px; border-radius:50%; background:var(--line); flex-shrink:0; }
+  .opt-meter .dot.filled{ background:var(--gold); }
+  .opt-label{ flex:1; }
+  .q-dim-wrap{ display:inline-flex; align-items:center; gap:5px; }
+  .q-dim-icon{ display:flex; color:var(--gold); }
+  .q-dim-icon svg{ display:block; }
+  .opt:hover{ border-color:var(--gold); background:#552027; }
+
+  #screen-loading{ text-align:center; padding:70px 32px; }
+  .spinner{ width:52px; height:52px; margin:0 auto 24px; border-radius:50%; border:3px solid var(--line); border-top-color:var(--gold); animation:spin 0.9s linear infinite; }
+  @keyframes spin{ to{ transform:rotate(360deg); } }
+  #loading-line{ font-family:'Space Mono',monospace; font-size:12px; color:var(--muted); }
+
+  .radar-wrap{ display:flex; justify-content:center; margin-bottom:20px; }
+  .shape-badge{
+    width:76px; height:76px; border-radius:50%; margin:0 auto 14px;
+    display:flex; align-items:center; justify-content:center;
+    font-family:'Noto Serif TC',serif; font-weight:900; font-size:32px; color:var(--gold-bright);
+    background:radial-gradient(circle at 35% 30%, var(--maroon-2), var(--maroon));
+    border:2px solid var(--gold);
+    box-shadow:0 0 0 4px rgba(212,175,55,0.12) inset, 0 4px 14px rgba(0,0,0,0.4);
+  }
+  .tier-badge{
+    display:inline-block; font-family:'Noto Serif TC',serif; font-size:13px; letter-spacing:0.15em;
+    color:var(--gold-bright); background:radial-gradient(circle at 35% 30%, var(--vermilion), #6E1A17);
+    border:2px solid var(--gold); border-radius:8px; padding:8px 18px; margin-bottom:12px; font-weight:900;
+    transform:rotate(-2deg); box-shadow:0 4px 10px rgba(0,0,0,0.45);
+  }
+  .tier-dots{ display:flex; justify-content:center; gap:6px; margin-bottom:18px; }
+  .tier-dots .tier-dot{ width:8px; height:8px; border-radius:50%; background:var(--maroon-2); border:1px solid var(--line); }
+  .tier-dots .tier-dot.filled{ background:var(--gold); border-color:var(--gold); }
+  .shape-name{ font-family:'Noto Serif TC', serif; font-size:24px; font-weight:900; margin-bottom:6px; color:var(--text); }
+  .shape-desc{ color:var(--muted); font-size:14.5px; margin-bottom:24px; }
+  .score-list{ display:flex; flex-direction:column; gap:8px; margin:20px 0 28px; }
+  .score-row{ display:flex; align-items:center; gap:8px; font-size:12.5px; }
+  .score-icon{ display:flex; color:var(--gold); flex-shrink:0; }
+  .score-row .label{ width:54px; color:var(--muted); font-family:'Space Mono',monospace; flex-shrink:0; }
+  .score-row .bar-track{ flex:1; height:8px; background:var(--maroon-2); border-radius:4px; overflow:hidden; }
+  .score-row .bar-fill{ display:block; height:100%; background:linear-gradient(90deg, var(--gold), var(--gold-bright)); border-radius:4px; }
+  .score-row .val{ width:34px; text-align:right; font-family:'Space Mono',monospace; color:var(--text); flex-shrink:0; }
+
+  .soft-note{ margin-top:32px; text-align:center; }
+  .soft-note .soft-eyebrow{ font-family:'Space Mono',monospace; font-size:10px; color:var(--muted); letter-spacing:0.1em; text-transform:uppercase; margin-bottom:8px; opacity:0.7; }
+  .soft-note .soft-text{ font-size:12.5px; color:var(--muted); line-height:1.7; margin:0 auto 14px; max-width:400px; }
+  .qr-wrap{ display:flex; justify-content:center; margin-bottom:14px; }
+  .qr-frame{ background:#fff; padding:12px; border-radius:10px; line-height:0; }
+  .fine{ font-size:11px; color:var(--muted); margin-top:12px; text-align:center; }
+
+  .footer-links{ display:flex; justify-content:center; gap:18px; margin-top:24px; }
+  .footer-links button{ background:none; border:none; color:var(--muted); font-size:12px; cursor:pointer; text-decoration:underline; }
+</style>
+</head>
+<body>
+
+<div class="app">
+
+  <!-- ============ 0. 首頁 ============ -->
+  <section id="screen-intro" class="screen active">
+    <div class="eyebrow">努力顯化系統・自我診斷</div>
+    <h1>你的努力，正在<span>兌現</span>，還是正在<span>貶值</span>？</h1>
+    <p class="lede">花 90 秒，看清楚你的努力，到底值不值錢。</p>
+
+    <div class="hero-radar" aria-hidden="true">
+      <svg viewBox="0 0 120 120" width="112" height="112">
+        <polygon points="60,10 105,45 88,100 32,100 15,45" fill="rgba(212,175,55,0.05)" stroke="var(--line)" stroke-width="1"/>
+        <polygon points="60,34 87,53 77,88 43,88 33,53" fill="none" stroke="rgba(212,175,55,0.4)" stroke-width="1"/>
+        <line x1="60" y1="60" x2="60" y2="10" stroke="rgba(212,175,55,0.15)" stroke-width="1"/>
+        <line x1="60" y1="60" x2="105" y2="45" stroke="rgba(212,175,55,0.15)" stroke-width="1"/>
+        <line x1="60" y1="60" x2="88" y2="100" stroke="rgba(212,175,55,0.15)" stroke-width="1"/>
+        <line x1="60" y1="60" x2="32" y2="100" stroke="rgba(212,175,55,0.15)" stroke-width="1"/>
+        <line x1="60" y1="60" x2="15" y2="45" stroke="rgba(212,175,55,0.15)" stroke-width="1"/>
+        <circle cx="60" cy="10" r="2.6" fill="var(--gold)"/>
+        <circle cx="105" cy="45" r="2.6" fill="var(--gold)"/>
+        <circle cx="88" cy="100" r="2.6" fill="var(--gold)"/>
+        <circle cx="32" cy="100" r="2.6" fill="var(--gold)"/>
+        <circle cx="15" cy="45" r="2.6" fill="var(--gold)"/>
+      </svg>
+    </div>
+
+    <div class="intro-block">
+      <p class="intro-text">這份診斷，改編自劉奕酉老師《被認可的努力》一書。</p>
+      <p class="placeholder-note">〔這裡預留一段作者資歷／代表案例，用來建立可信度——需要你提供真實內容，我不會替你編造〕</p>
+    </div>
+
+    <p class="reframe">這不是在測你努不努力，<br>而是在測——你的努力，有沒有被兌現的能力。</p>
+
+    <div class="dims">
+      <div class="dim-chip"><span class="dim-chip-icon"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="4.2"/><circle cx="12" cy="12" r="1" fill="currentColor" stroke="none"/></svg></span><b>對位</b>辨識賽道</div>
+      <div class="dim-chip"><span class="dim-chip-icon"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5h16v9.5H9.5L5 19v-4H4z"/></svg></span><b>轉譯</b>敘事框架</div>
+      <div class="dim-chip"><span class="dim-chip-icon"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.5l6.5 2.6v5.4c0 4.6-2.7 7.7-6.5 8.6-3.8-.9-6.5-4-6.5-8.6V6.1L12 3.5z"/><path d="M8.7 12l2.4 2.4 4.2-4.6"/></svg></span><b>信任</b>回報節奏</div>
+      <div class="dim-chip"><span class="dim-chip-icon"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3.2" y="8.2" width="8" height="7.6" rx="3.8"/><rect x="12.8" y="8.2" width="8" height="7.6" rx="3.8"/></svg></span><b>槓桿</b>系統賦能</div>
+      <div class="dim-chip"><span class="dim-chip-icon"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 12.2L12.2 3.5H20.5V11.8L11.8 20.5L3.5 12.2Z"/><circle cx="16" cy="8" r="1.3" fill="currentColor" stroke="none"/></svg></span><b>品牌</b>標籤定價</div>
+    </div>
+
+    <p class="unify-q">這 15 題，本質上只回答一個問題：<br><b>你的努力，正在被看見，還是正在被典當？</b></p>
+
+    <div class="divider"></div>
+
+    <div class="exclusivity">
+      <div class="ex-title">⚠ 提醒：這份診斷不是給每個人的。</div>
+      <div class="ex-row good">
+        <b>適合你，如果——</b>
+        <ul>
+          <li>拚命工作，卻總覺得功勞被別人拿走</li>
+          <li>開始懷疑「認真做事」跟「被看見」根本是兩件事</li>
+          <li>終於承認，光靠苦幹實幹，換不到你要的位置</li>
+        </ul>
+      </div>
+      <div class="ex-row bad">
+        <b>勸退你，如果——</b>
+        <ul>
+          <li>只想聽勵志故事，這裡沒有雞湯</li>
+          <li>不想面對真實落差，這裡沒有安慰劑</li>
+          <li>還相信「只要夠努力，主子總有一天會看到」——這份診斷會戳破這個念想</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="reward-stack">
+      <div class="rs-title">完成診斷後，你會拿到：</div>
+      <ul>
+        <li><span class="rs-icon"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19V11M12 19V5M19 19V14"/></svg></span><b>努力兌現分數</b>——0～75 分，一眼看出你現在的處境</li>
+        <li><span class="rs-icon"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><polygon points="12,4 19,9.5 16.5,18 7.5,18 5,9.5"/></svg></span><b>五維度雷達圖</b>——你以為的弱點，可能根本不是重點</li>
+        <li><span class="rs-icon"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 12.2L12.2 3.5H20.5V11.8L11.8 20.5L3.5 12.2Z"/><circle cx="16" cy="8" r="1.3" fill="currentColor" stroke="none"/></svg></span><b>職場瓶頸類型標籤</b>——沉默的公牛／職場未爆彈／深山的專家／勤奮打雜王</li>
+        <li><span class="rs-icon"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="12" r="2.2"/><circle cx="18" cy="6" r="2.2"/><circle cx="18" cy="18" r="2.2"/><path d="M8 10.8L16 7M8 13.2L16 17"/></svg></span>可直接分享或下載的診斷圖卡，附一組領取新書優惠的 QR Code</li>
+      </ul>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="honesty-protocol">
+      <div class="hp-title"><span class="hp-icon"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><path d="M12 7v5l3.5 3.5"/></svg></span>誠實協議</div>
+      <p>這份測驗沒有及格分數，也不必討好任何人。</p>
+      <p>如果某一題你猶豫超過 5 秒才選——那通常就是最誠實的答案。</p>
+    </div>
+
+    <p class="logistics">約 90 秒 · 15 題 · 完全免費 · 不需要留下任何個資</p>
+
+    <button class="btn" onclick="startQuiz()">開始診斷 →</button>
+    <p class="fine" style="margin-top:10px;">誠實作答，比答對更重要。</p>
+  </section>
+
+  <!-- ============ 1. 測驗 ============ -->
+  <section id="screen-quiz" class="screen">
+    <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
+    <div class="q-meta"><span id="q-index">01 / 15</span><span class="q-dim-wrap"><span class="q-dim-icon" id="q-dim-icon"></span><span id="q-dim">對位力</span></span></div>
+    <div class="q-text" id="q-text">—</div>
+    <div class="opts" id="q-opts"></div>
+  </section>
+
+  <!-- ============ 2. 計算中 ============ -->
+  <section id="screen-loading" class="screen">
+    <div class="spinner"></div>
+    <div id="loading-line" class="mono">正在繪製你的雷達圖…</div>
+  </section>
+
+  <!-- ============ 3. 結果（雷達圖直接顯示，不解鎖） ============ -->
+  <section id="screen-result" class="screen">
+    <div class="shape-badge" id="shape-badge">—</div>
+    <div class="tier-badge" id="tier-badge">—</div>
+    <div class="tier-dots" id="tier-dots"></div>
+    <div class="shape-name" id="shape-name">—</div>
+    <div class="shape-desc" id="shape-desc">—</div>
+
+    <div class="radar-wrap"><canvas id="radar-canvas" width="300" height="300"></canvas></div>
+
+    <div class="score-list" id="score-list"></div>
+
+    <button class="btn secondary" onclick="shareCard()">分享我的結果</button>
+
+    <div class="soft-note" id="qr-card">
+      <p class="soft-eyebrow">順道一提</p>
+      <p class="soft-text">如果你想更有方法地把這幾個維度打磨起來，高效顧問劉奕酉老師的課程，最近剛好有限時優惠名額。</p>
+      <div class="qr-wrap"><div class="qr-frame"><img id="qr-code" width="120" height="120" alt="課程資訊"></div></div>
+      <p class="fine">掃描看看，沒興趣就當作路過，不勉強。</p>
+    </div>
+
+    <div class="footer-links">
+      <button onclick="restart()">重新測一次</button>
+    </div>
+  </section>
+
+</div>
+
+<script>
+/* =========================================================
+   之後要換連結時，只要改這裡兩個網址，不用動其他任何東西
+   ========================================================= */
+// 之後要換內容時，只要改這裡兩個值，不用動其他任何東西
+const CONFIG = {
+  QR_URL:  '#qr-placeholder',   // TODO: 換成正式的課程／優惠連結，結果頁的 QR Code 會指向這裡
+  AD_COPY: '高效顧問劉奕酉老師，最近剛好有限時優惠名額。'   // TODO: 確認後可再調整文案細節
+};
+
+/* ---------------- 題庫：5 維度 x 3 題，每題各自的選項文案 ---------------- */
+const QUESTIONS = [
+  {dim:'對位力', key:'align',
+   text:'你能清楚說出目前最重要的三個目標，而且大部分工作時間都花在這些事情上。',
+   opts:['沒辦法','只想到一個','我要想很久','應該可以...但還少一個','我現在就有想法!']},
+
+  {dim:'對位力', key:'align',
+   text:'面對不同的決策者，你會準備不同版本的溝通方式來說服對方。',
+   opts:['我始終如一!絕不轉彎','不太會~','看心情','很多情況下，會','每次事前都要演練很多次!']},
+
+  {dim:'對位力', key:'align',
+   text:'你懂得婉拒（或低標完成）那些對目標沒貢獻、卻很耗你精力的雜事。',
+   opts:['來都來了、做都做了......','通常不會想到這個','要看情況ㄟ','應付過關就好~認真就輸了~','斤斤計較CP值是我的優點!']},
+
+  {dim:'轉譯力', key:'trans',
+   text:'不管口頭或書面，你都能在一分鐘內講清楚一件事的背景、行動與結果。',
+   opts:['怎麼可能講得清楚!','待本宮好好想想......','要看情況吧!','大多可以~','人家都說我是行走的AI!!!']},
+
+  {dim:'轉譯力', key:'trans',
+   text:'不管是自己寫還是叫AI生成，你交出去的東西永遠能讓對方一眼抓到重點在哪。',
+   opts:['丟出去對方常常回「所以重點是?」','連我自己回頭看都要想一下重點','看有沒有空整理，沒空就算了','大多時候抓得到，偶爾會被問','三秒定生死，重點永遠在最上面!']},
+
+  {dim:'轉譯力', key:'trans',
+   text:'遇到突發狀況，你能把它包裝成「這件事需要專業才能解決」，而不只是麻煩。',
+   opts:['你行你上吧，我先躺著','通常不會...做得很累...','要看什麼事吧~','會啦會啦我還是(應該)會做啦','全力以赴!革命十一次!']},
+
+  {dim:'信任力', key:'trust',
+   text:'你回報進度時，會清楚說出「下一步」具體的時間與行動。',
+   opts:['"下一步"是什麼?','想到的時候，會','要看情況ㄟ~','這不是該問的嗎?','一定要問的啊!乾脆放在簽名檔?']},
+
+  {dim:'信任力', key:'trust',
+   text:'專案卡關時，你會在被問之前，就主動帶著解決方案去同步進度。',
+   opts:['還有這招?!從沒想過','如果我有辦法再說......','要看什麼事情吧~','總要找到藉口啊!','連負荊請罪都要先準備藤條了!!!']},
+
+  {dim:'信任力', key:'trust',
+   text:'即使出了大差錯，你的回報依然專注於止血方案，而不是找藉口。',
+   opts:['第一時間先想好推託話術','腦筋一片空白只想裝死','先看是誰的鍋再說','會硬著頭皮先端出解法','出包現場我最穩，解法比道歉快!']},
+
+  {dim:'槓桿力', key:'lever',
+   text:'你曾把自己的成功經驗整理成方法或範本，讓別人也能複製同樣成果。',
+   opts:['江湖一點訣，我才不告訴你','從沒想過要寫下來','心情好會口頭教一下','會整理個大概，堪用就好','我的SOP已經是團隊聖經了!']},
+
+  {dim:'槓桿力', key:'lever',
+   text:'你常常是不同角色或部門之間的橋樑，能把彼此的語言翻譯給對方聽。',
+   opts:['他們吵他們的，關我什麼事','光聽都要靠翻譯蒟蒻了','看場合，能躲就躲','常常被抓去當夾心餅乾翻譯','沒有我，這場會議根本開不完!']},
+
+  {dim:'槓桿力', key:'lever',
+   text:'因為有你在，團隊整體的回報品質與專業形象都明顯提升。',
+   opts:['我拖累大家還差不多','應該感覺不太出來','偶爾被稱讚一下下','大家開始會先讓我把關再送出','我在，主管才敢閉眼交差!']},
+
+  {dim:'品牌力', key:'brand',
+   text:'遇到某一類特定問題，大家第一個想到的就是你。',
+   opts:['大家想到我通常是要推卸責任','應該沒什麼存在感','某幾個人偶爾會想到我','固定幾類問題已經被貼上我的名字','那個問題找OOO，全公司都這樣說!']},
+
+  {dim:'品牌力', key:'brand',
+   text:'你衡量一件事的價值，看的是難度與影響力，而不是花了多少時間。',
+   opts:['準時打卡下班比較重要','習慣用工時衡量自己','看當下比較想聽哪個','會提醒自己往影響力想','時數是假的，解決了什麼才是真的!']},
+
+  {dim:'品牌力', key:'brand',
+   text:'即使組織或環境變動，你的專業標籤仍然讓你在市場上具競爭力。',
+   opts:['離開這裡我什麼都不是','換個環境大概要重新來過','看新環境賞不賞臉','履歷拿出去還算有東西可以講','走到哪都有人搶著要，標籤就是我的護城河!']}
+];
+
+const DIM_ORDER = ['align','trans','trust','lever','brand'];
+const DIM_LABEL = {align:'對位力', trans:'轉譯力', trust:'信任力', lever:'槓桿力', brand:'品牌力'};
+const DIM_ICON_PATHS = {
+  align: '<circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="4.2"/><circle cx="12" cy="12" r="1" fill="currentColor" stroke="none"/>',
+  trans: '<path d="M4 5.5h16v9.5H9.5L5 19v-4H4z"/>',
+  trust: '<path d="M12 3.5l6.5 2.6v5.4c0 4.6-2.7 7.7-6.5 8.6-3.8-.9-6.5-4-6.5-8.6V6.1L12 3.5z"/><path d="M8.7 12l2.4 2.4 4.2-4.6"/>',
+  lever: '<rect x="3.2" y="8.2" width="8" height="7.6" rx="3.8"/><rect x="12.8" y="8.2" width="8" height="7.6" rx="3.8"/>',
+  brand: '<path d="M3.5 12.2L12.2 3.5H20.5V11.8L11.8 20.5L3.5 12.2Z"/><circle cx="16" cy="8" r="1.3" fill="currentColor" stroke="none"/>'
+};
+function dimIconSVG(key, size){
+  return `<svg viewBox="0 0 24 24" width="${size}" height="${size}" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">${DIM_ICON_PATHS[key]}</svg>`;
+}
+let current = 0;
+let answers = [];
+let scores = {};
+let shapeResult = {};
+
+/* ---------------- 畫面切換 ---------------- */
+function show(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+function startQuiz(){
+  current = 0; answers = [];
+  show('screen-quiz');
+  renderQuestion();
+}
+
+function renderQuestion(){
+  const q = QUESTIONS[current];
+  document.getElementById('q-index').textContent = String(current+1).padStart(2,'0') + ' / ' + QUESTIONS.length;
+  document.getElementById('q-dim-icon').innerHTML = dimIconSVG(q.key, 14);
+  document.getElementById('q-dim').textContent = q.dim;
+  document.getElementById('q-text').textContent = q.text;
+  document.getElementById('progress-fill').style.width = (current/QUESTIONS.length*100) + '%';
+
+  const wrap = document.getElementById('q-opts');
+  wrap.innerHTML = '';
+  q.opts.forEach((label, i)=>{
+    const btn = document.createElement('button');
+    btn.className = 'opt';
+    let dots = '';
+    for(let d=1; d<=5; d++){ dots += `<span class="dot${d<=i+1 ? ' filled':''}"></span>`; }
+    btn.innerHTML = `<span class="opt-meter">${dots}</span><span class="opt-label">${label}</span>`;
+    btn.onclick = ()=> selectAnswer(i+1);
+    wrap.appendChild(btn);
+  });
+}
+
+function selectAnswer(val){
+  answers.push({key:QUESTIONS[current].key, val});
+  current++;
+  if(current < QUESTIONS.length){
+    renderQuestion();
+  } else {
+    document.getElementById('progress-fill').style.width = '100%';
+    finishQuiz();
+  }
+}
+
+/* ---------------- 計分邏輯 ---------------- */
+function finishQuiz(){
+  show('screen-loading');
+  scores = {align:0, trans:0, trust:0, lever:0, brand:0};
+  answers.forEach(a=> scores[a.key]+=a.val);
+  shapeResult = computeShape(scores);
+
+  setTimeout(()=>{
+    revealResult();
+  }, 1000);
+}
+
+function total(scores){ return DIM_ORDER.reduce((s,k)=>s+scores[k],0); }
+
+function computeShape(scores){
+  const t = total(scores); // 15~75
+  let tier;
+  if(t>=66) tier = {name:'高級顯化者', level:4, desc:'努力正以極高匯率兌現，你已經擁有強大的定價權。'};
+  else if(t>=48) tier = {name:'高潛力顯化者', level:3, desc:'核心技術已掌握，但有局部「漏財」現象，補齊短板將爆發成長。'};
+  else if(t>=33) tier = {name:'苦勞累積者', level:2, desc:'努力大於認可，正處於「職場貶值」邊緣，需立即轉向顯化思維。'};
+  else tier = {name:'隱形邊緣人', level:1, desc:'價值被嚴重低估或忽略，面臨隨時被稀釋與捨棄的風險。'};
+
+  const hi = k=>scores[k]>=11, lo = k=>scores[k]<=7;
+  let shape;
+  if(hi('trust') && (lo('trans')||lo('brand'))){
+    shape = {name:'沉默的公牛', glyph:'牛', desc:'你很可靠，但不擅長說故事。建議提升轉譯力，別讓功勞死在沉默裡。'};
+  } else if(hi('trans') && hi('lever') && lo('trust')){
+    shape = {name:'職場未爆彈', glyph:'彈', desc:'你很會包裝，但交付不穩定。培養信任力是你的當下任務——信任才是認可的續航力。'};
+  } else if(hi('brand') && (lo('align')||lo('trust'))){
+    shape = {name:'深山的專家', glyph:'山', desc:'你很強，但跟公司目標脫節。建議改善對位力，再好的人才也需要對的舞台。'};
+  } else if(hi('align') && hi('trust') && (lo('lever')||lo('brand'))){
+    shape = {name:'勤奮打雜王', glyph:'雜', desc:'你選對路子且回報穩定，但還在靠單打獨鬥。建議培養槓桿力，學會賦能，才能換取自由。'};
+  } else {
+    shape = {name:'全面發展中', glyph:'全', desc:'你的五個維度沒有明顯短板，接下來的重點是把每一項都推向更高的匯率。'};
+  }
+  return {tier, shape};
+}
+
+/* ---------------- 雷達圖繪製（原生 Canvas） ---------------- */
+function drawRadar(canvasId, scores){
+  const canvas = document.getElementById(canvasId);
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  const cx = W/2, cy = H/2, R = W/2 - 46;
+  const N = DIM_ORDER.length;
+  const max = 15;
+
+  ctx.clearRect(0,0,W,H);
+
+  ctx.strokeStyle = 'rgba(240,203,99,0.10)';
+  ctx.lineWidth = 1;
+  for(let ring=1; ring<=4; ring++){
+    ctx.beginPath();
+    for(let i=0;i<=N;i++){
+      const ang = -Math.PI/2 + i*(2*Math.PI/N);
+      const r = R*ring/4;
+      const x = cx + r*Math.cos(ang), y = cy + r*Math.sin(ang);
+      i===0 ? ctx.moveTo(x,y) : ctx.lineTo(x,y);
+    }
+    ctx.stroke();
+  }
+  ctx.fillStyle = '#B79C7A';
+  ctx.font = '11px "Space Mono", monospace';
+  ctx.textAlign = 'center';
+  for(let i=0;i<N;i++){
+    const ang = -Math.PI/2 + i*(2*Math.PI/N);
+    const x2 = cx + R*Math.cos(ang), y2 = cy + R*Math.sin(ang);
+    ctx.beginPath(); ctx.moveTo(cx,cy); ctx.lineTo(x2,y2);
+    ctx.strokeStyle = 'rgba(240,203,99,0.10)'; ctx.stroke();
+    const lx = cx + (R+22)*Math.cos(ang), ly = cy + (R+22)*Math.sin(ang);
+    ctx.fillText(DIM_LABEL[DIM_ORDER[i]], lx, ly+4);
+  }
+  ctx.beginPath();
+  DIM_ORDER.forEach((k,i)=>{
+    const ang = -Math.PI/2 + i*(2*Math.PI/N);
+    const r = R * (scores[k]/max);
+    const x = cx + r*Math.cos(ang), y = cy + r*Math.sin(ang);
+    i===0 ? ctx.moveTo(x,y) : ctx.lineTo(x,y);
+  });
+  ctx.closePath();
+  ctx.fillStyle = 'rgba(212,175,55,0.22)';
+  ctx.strokeStyle = '#D4AF37';
+  ctx.lineWidth = 2.2;
+  ctx.fill(); ctx.stroke();
+
+  DIM_ORDER.forEach((k,i)=>{
+    const ang = -Math.PI/2 + i*(2*Math.PI/N);
+    const r = R * (scores[k]/max);
+    const x = cx + r*Math.cos(ang), y = cy + r*Math.sin(ang);
+    ctx.beginPath(); ctx.arc(x,y,3.5,0,2*Math.PI);
+    ctx.fillStyle = '#D4AF37'; ctx.fill();
+  });
+}
+
+/* ---------------- 顯示結果（不解鎖，直接秀） ---------------- */
+function revealResult(){
+  document.getElementById('shape-badge').textContent = shapeResult.shape.glyph;
+  document.getElementById('tier-badge').textContent = shapeResult.tier.name + '　' + total(scores) + ' / 75';
+
+  let dotsHtml = '';
+  for(let d=1; d<=4; d++){ dotsHtml += `<span class="tier-dot${d<=shapeResult.tier.level ? ' filled':''}"></span>`; }
+  document.getElementById('tier-dots').innerHTML = dotsHtml;
+
+  document.getElementById('shape-name').textContent = shapeResult.shape.name;
+  document.getElementById('shape-desc').textContent = shapeResult.tier.desc + ' ' + shapeResult.shape.desc;
+
+  const list = document.getElementById('score-list');
+  list.innerHTML = '';
+  DIM_ORDER.forEach(k=>{
+    const row = document.createElement('div');
+    row.className = 'score-row';
+    row.innerHTML = `<span class="score-icon">${dimIconSVG(k,14)}</span><span class="label mono">${DIM_LABEL[k]}</span>
+      <span class="bar-track"><span class="bar-fill" style="width:${scores[k]/15*100}%"></span></span>
+      <span class="val mono">${scores[k]}/15</span>`;
+    list.appendChild(row);
+  });
+
+  // 設定 QR Code：掃描後導向優惠／報名連結
+  document.getElementById('qr-code').src =
+    'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=' + encodeURIComponent(CONFIG.QR_URL);
+
+  show('screen-result');
+  setTimeout(()=> drawRadar('radar-canvas', scores), 60);
+}
+
+/* ---------------- 分享：支援就叫原生分享，不支援就下載 ---------------- */
+async function shareCard(){
+  const srcCanvas = document.getElementById('radar-canvas');
+  const W = 600, H = 760;
+  const card = document.createElement('canvas');
+  card.width = W; card.height = H;
+  const ctx = card.getContext('2d');
+
+  const grad = ctx.createLinearGradient(0,0,0,H);
+  grad.addColorStop(0,'#2A0D10'); grad.addColorStop(1,'#150506');
+  ctx.fillStyle = grad; ctx.fillRect(0,0,W,H);
+
+  ctx.fillStyle = '#D4AF37';
+  ctx.font = '700 13px "Space Mono", monospace';
+  ctx.textAlign = 'center';
+  ctx.fillText('努力顯化系統・自我診斷', W/2, 56);
+
+  ctx.fillStyle = '#F0CB63';
+  ctx.font = '900 30px "Noto Serif TC", serif';
+  ctx.fillText(shapeResult.shape.name, W/2, 104);
+
+  ctx.fillStyle = '#B79C7A';
+  ctx.font = '13px "Noto Sans TC", sans-serif';
+  ctx.fillText(shapeResult.tier.name + '　' + total(scores) + ' / 75 分', W/2, 130);
+
+  ctx.drawImage(srcCanvas, (W-300)/2, 160, 300, 300);
+
+  ctx.fillStyle = '#F2E6CE';
+  ctx.font = '13px "Noto Sans TC", sans-serif';
+  wrapText(ctx, shapeResult.shape.desc, W/2, 500, 460, 20);
+
+  // 分隔線
+  ctx.strokeStyle = 'rgba(212,175,55,0.2)';
+  ctx.beginPath(); ctx.moveTo(70, 595); ctx.lineTo(W-70, 595); ctx.stroke();
+
+  // 低調帶入（保留極小的 AD 標示以維持誠實揭露，但不做成醒目色塊）
+  ctx.fillStyle = 'rgba(183,156,122,0.55)';
+  ctx.font = '700 9px "Space Mono", monospace';
+  ctx.fillText('AD', W/2, 622);
+  ctx.fillStyle = '#B79C7A';
+  ctx.font = '12px "Noto Sans TC", sans-serif';
+  wrapText(ctx, CONFIG.AD_COPY, W/2, 645, 460, 19);
+
+  ctx.fillStyle = '#B79C7A';
+  ctx.font = '11px "Space Mono", monospace';
+  ctx.fillText('#被認可的努力　#努力顯化雷達圖', W/2, H-30);
+
+  card.toBlob(async (blob)=>{
+    const file = new File([blob], '我的努力顯化雷達圖.png', {type:'image/png'});
+    const canNativeShare = navigator.canShare && navigator.canShare({files:[file]});
+
+    if(canNativeShare){
+      try{
+        await navigator.share({
+          files:[file],
+          title:'我的努力顯化雷達圖',
+          text:`我是「${shapeResult.shape.name}」！你的呢？來測測看👉`
+        });
+        return; // 使用者透過原生分享完成，結束
+      }catch(err){
+        if(err && err.name === 'AbortError') return; // 使用者自己取消，不做任何事
+        // 其他失敗（極少數瀏覽器異常），才落回下載
+      }
+    }
+    // 不支援原生分享，或分享失敗：直接下載到裝置
+    const link = document.createElement('a');
+    link.download = '我的努力顯化雷達圖.png';
+    link.href = URL.createObjectURL(blob);
+    link.click();
+  }, 'image/png');
+}
+
+function wrapText(ctx, text, x, y, maxWidth, lineHeight){
+  let line = '', lines = [];
+  for(const ch of text){
+    const test = line + ch;
+    if(ctx.measureText(test).width > maxWidth && line !== ''){ lines.push(line); line = ch; }
+    else line = test;
+  }
+  lines.push(line);
+  ctx.textAlign = 'center';
+  lines.forEach((l,i)=> ctx.fillText(l, x, y + i*lineHeight));
+}
+
+function restart(){ show('screen-intro'); }
+</script>
+</body>
+</html>
