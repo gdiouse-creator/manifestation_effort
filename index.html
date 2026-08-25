@@ -743,66 +743,106 @@ function revealResult(){
 
 /* ---------------- 分享：支援就叫原生分享，不支援就下載 ---------------- */
 async function shareCard(){
-  // 若這個瀏覽器環境本來就不支援原生分享（例如非 HTTPS、或本機 file:// 開啟），
-  // 先同步開好一個空白分頁，避免等圖片畫完才 window.open 被瀏覽器擋成彈跳視窗
-  const hasShareAPI = typeof navigator.share === 'function';
-  const preOpened = hasShareAPI ? null : window.open('', '_blank');
+  // 桌機版的原生分享面板沒有「另存新檔」選項（只有一堆 App 圖示），
+  // 對桌機使用者反而更難用，所以只有手機才走原生分享，桌機一律直接開新分頁，
+  // 用瀏覽器本身的右鍵「另存圖片」（要轉 PDF 也可以直接 Ctrl+P 列印那個分頁）
+  const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+  const useShareAPI = isMobile && typeof navigator.share === 'function';
+  const preOpened = useShareAPI ? null : window.open('', '_blank');
+
+  // 書封圖片已經內嵌在頁面上，直接借用同一份，不用另外存一次 base64
+  const coverImg = new Image();
+  coverImg.src = document.querySelector('.cover-img').src;
+  if(!coverImg.complete){
+    await new Promise(resolve => { coverImg.onload = resolve; coverImg.onerror = resolve; });
+  }
+
+  // 講座資訊直接讀頁面上現有的內容，跟畫面上顯示的永遠是同一份，不用維護兩次
+  const seminarTitle = document.querySelector('.seminar-title').innerText.replace(/\n/g, ' ');
+  const siRows = document.querySelectorAll('.si-row');
+  const seminarDate = siRows[0]?.querySelector('span:last-child')?.textContent || '';
+  const seminarVenue = siRows[1]?.querySelector('span:last-child')?.textContent || '';
+  const seminarSpeaker = siRows[2]?.querySelector('span:last-child')?.textContent || '';
 
   const srcCanvas = document.getElementById('radar-canvas');
-  const W = 600, H = 760;
+  const S = 900; // 正方形 1:1，方便直接發限動或社群貼文
   const card = document.createElement('canvas');
-  card.width = W; card.height = H;
+  card.width = S; card.height = S;
   const ctx = card.getContext('2d');
 
-  const grad = ctx.createLinearGradient(0,0,0,H);
+  const grad = ctx.createLinearGradient(0,0,0,S);
   grad.addColorStop(0,'#F6F1E4'); grad.addColorStop(1,'#EDE4D0');
-  ctx.fillStyle = grad; ctx.fillRect(0,0,W,H);
+  ctx.fillStyle = grad; ctx.fillRect(0,0,S,S);
 
-  ctx.fillStyle = '#B85C34';
-  ctx.font = '700 13px "Space Mono", monospace';
   ctx.textAlign = 'center';
-  ctx.fillText('努力顯化系統・自我診斷', W/2, 56);
+  ctx.fillStyle = '#B85C34';
+  ctx.font = '700 14px "Space Mono", monospace';
+  ctx.fillText('努力顯化系統・自我診斷', S/2, 54);
 
   ctx.fillStyle = '#8C4527';
-  ctx.font = '900 26px "Noto Serif TC", serif';
+  ctx.font = '900 28px "Noto Serif TC", serif';
   const headline = shapeResult.priority ? ('優先罩門：' + shapeResult.priority.name) : '五力發展均衡';
-  ctx.fillText(headline, W/2, 104);
+  ctx.fillText(headline, S/2, 96);
 
   ctx.fillStyle = '#8A7F68';
-  ctx.font = '13px "Noto Sans TC", sans-serif';
-  ctx.fillText(shapeResult.tier.name + '　' + total(scores) + ' / 125 分', W/2, 130);
+  ctx.font = '14px "Noto Sans TC", sans-serif';
+  ctx.fillText(shapeResult.tier.name + '　' + total(scores) + ' / 125 分', S/2, 122);
 
-  ctx.drawImage(srcCanvas, (W-300)/2, 160, 300, 300);
+  const radarSize = 250;
+  ctx.drawImage(srcCanvas, (S-radarSize)/2, 145, radarSize, radarSize);
 
   ctx.fillStyle = '#2B2620';
-  ctx.font = '13px "Noto Sans TC", sans-serif';
+  ctx.font = '13.5px "Noto Sans TC", sans-serif';
   const cardDesc = shapeResult.priority
     ? (shapeResult.priority.lo + '　' + shapeResult.priority.fix)
     : shapeResult.tier.desc;
-  wrapText(ctx, cardDesc, W/2, 500, 460, 20);
+  wrapText(ctx, cardDesc, S/2, 428, 760, 21, 'center');
 
   // 分隔線
-  ctx.strokeStyle = 'rgba(184,92,52,0.2)';
-  ctx.beginPath(); ctx.moveTo(70, 595); ctx.lineTo(W-70, 595); ctx.stroke();
+  ctx.strokeStyle = 'rgba(184,92,52,0.25)';
+  ctx.beginPath(); ctx.moveTo(70, 522); ctx.lineTo(S-70, 522); ctx.stroke();
 
-  // 低調帶入（保留極小的 AD 標示以維持誠實揭露，但不做成醒目色塊）
-  ctx.fillStyle = 'rgba(138,127,104,0.55)';
-  ctx.font = '700 9px "Space Mono", monospace';
-  ctx.fillText('AD', W/2, 622);
-  ctx.fillStyle = '#8A7F68';
-  ctx.font = '12px "Noto Sans TC", sans-serif';
-  wrapText(ctx, CONFIG.AD_COPY, W/2, 645, 460, 19);
+  // 書封縮圖（依原始比例縮放，帶一點陰影，看起來像實體書立著）
+  const coverW = 150;
+  const coverH = coverW * (coverImg.naturalHeight / coverImg.naturalWidth || 1.3);
+  const coverX = 70, coverY = 548;
+  ctx.save();
+  ctx.shadowColor = 'rgba(60,45,25,0.3)';
+  ctx.shadowBlur = 16;
+  ctx.shadowOffsetY = 6;
+  ctx.drawImage(coverImg, coverX, coverY, coverW, coverH);
+  ctx.restore();
 
+  // 講座資訊：跟頁面上同一份內容，AD 小標示保持誠實揭露
+  const textX = coverX + coverW + 26;
+  const textW = S - 70 - textX;
+  ctx.textAlign = 'left';
+
+  ctx.fillStyle = 'rgba(138,127,104,0.6)';
+  ctx.font = '700 10px "Space Mono", monospace';
+  ctx.fillText('AD ・ 限額免費講座', textX, coverY + 4);
+
+  ctx.fillStyle = '#2B2620';
+  ctx.font = '900 17px "Noto Serif TC", serif';
+  let ty = wrapText(ctx, seminarTitle, textX, coverY + 32, textW, 23, 'left') + 6;
+
+  ctx.font = '12.5px "Noto Sans TC", sans-serif';
+  ctx.fillStyle = '#5A5346';
+  if(seminarDate)    ty = wrapText(ctx, '日期｜' + seminarDate, textX, ty, textW, 18, 'left') + 4;
+  if(seminarVenue)   ty = wrapText(ctx, '地點｜' + seminarVenue, textX, ty, textW, 18, 'left') + 4;
+  if(seminarSpeaker) ty = wrapText(ctx, '主講｜' + seminarSpeaker, textX, ty, textW, 18, 'left') + 4;
+
+  ctx.textAlign = 'center';
   ctx.fillStyle = '#8A7F68';
   ctx.font = '11px "Space Mono", monospace';
-  ctx.fillText('#被認可的努力　#努力顯化雷達圖', W/2, H-30);
+  ctx.fillText('#被認可的努力　#努力顯化雷達圖', S/2, S-30);
 
   card.toBlob((blob)=>{
     if(!blob){ if(preOpened) preOpened.close(); return; }
     const url = URL.createObjectURL(blob);
 
     (async ()=>{
-      if(hasShareAPI){
+      if(useShareAPI){
         const file = new File([blob], '我的努力顯化雷達圖.png', {type:'image/png'});
         const canNativeShare = navigator.canShare && navigator.canShare({files:[file]});
         if(canNativeShare){
@@ -819,8 +859,8 @@ async function shareCard(){
           }
         }
       }
-      // 不支援原生分享，或分享失敗：開一個分頁直接顯示圖片，
-      // 手機長按可以「儲存圖片」或「拷貝」，電腦右鍵可以「另存圖片」
+      // 桌機、或手機分享失敗：開一個分頁直接顯示圖片，
+      // 手機長按可以「儲存圖片」或「拷貝」，電腦右鍵可以「另存圖片」（要轉PDF可直接Ctrl+P列印）
       if(preOpened && !preOpened.closed){
         preOpened.location.href = url;
       } else {
@@ -830,7 +870,7 @@ async function shareCard(){
   }, 'image/png');
 }
 
-function wrapText(ctx, text, x, y, maxWidth, lineHeight){
+function wrapText(ctx, text, x, y, maxWidth, lineHeight, align){
   let line = '', lines = [];
   for(const ch of text){
     const test = line + ch;
@@ -838,8 +878,9 @@ function wrapText(ctx, text, x, y, maxWidth, lineHeight){
     else line = test;
   }
   lines.push(line);
-  ctx.textAlign = 'center';
+  ctx.textAlign = align || 'center';
   lines.forEach((l,i)=> ctx.fillText(l, x, y + i*lineHeight));
+  return y + lines.length*lineHeight; // 回傳畫完之後的下一個可用 y 座標
 }
 
 function restart(){ show('screen-intro'); }
