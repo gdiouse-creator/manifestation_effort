@@ -8,21 +8,22 @@
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@700;900&family=Noto+Sans+TC:wght@400;500;700;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
   :root{
-    --ink:#150506;
-    --maroon:#3A0F14;
-    --maroon-2:#4A1A1F;
-    --line:#6B4226;
-    --text:#F2E6CE;
-    --muted:#B79C7A;
-    --gold:#D4AF37;
-    --gold-bright:#F0CB63;
-    --vermilion:#9E2B25;
+    --ink:#E7DFC9;
+    --maroon:#F6F1E4;
+    --maroon-2:#EDE4D0;
+    --line:#D9CCAE;
+    --text:#2B2620;
+    --muted:#8A7F68;
+    --gold:#B85C34;
+    --gold-bright:#D97B54;
+    --vermilion:#8C4527;
+    --olive:#6E7350;
     --radius:10px;
   }
   *{box-sizing:border-box; margin:0; padding:0;}
   html,body{height:100%;}
   body{
-    background:radial-gradient(circle at 20% -10%, #2A0D10 0%, var(--ink) 55%);
+    background:radial-gradient(circle at 20% -10%, #F2ECDC 0%, var(--ink) 55%);
     color:var(--text);
     font-family:'Noto Sans TC', sans-serif;
     min-height:100vh;
@@ -41,7 +42,7 @@
     border:1px solid var(--line);
     border-radius:var(--radius);
     overflow:hidden;
-    box-shadow:0 30px 80px -20px rgba(0,0,0,0.7);
+    box-shadow:0 30px 80px -20px rgba(60,45,25,0.18);
   }
   .app::before, .app::after{
     content:''; position:absolute; width:26px; height:26px; border:2px solid var(--gold); opacity:0.55; pointer-events:none; z-index:2;
@@ -55,9 +56,9 @@
   .eyebrow{
     display:inline-flex; align-items:center; gap:8px;
     font-family:'Space Mono', monospace; font-size:11px; letter-spacing:0.12em;
-    color:var(--gold); text-transform:uppercase; margin-bottom:18px;
+    color:var(--olive); text-transform:uppercase; margin-bottom:18px;
   }
-  .eyebrow::before{ content:''; width:6px; height:6px; border-radius:50%; background:var(--gold); box-shadow:0 0 8px var(--gold); }
+  .eyebrow::before{ content:''; width:6px; height:6px; border-radius:50%; background:var(--olive); box-shadow:0 0 6px rgba(110,115,80,0.5); }
 
   h1{ font-family:'Noto Serif TC', serif; font-size:28px; font-weight:900; line-height:1.45; margin-bottom:14px; }
   h1 span{ color:var(--gold-bright); }
@@ -70,7 +71,7 @@
   .intro-block{ margin-bottom:20px; }
   .hero-radar{ display:flex; justify-content:center; margin:6px 0 22px; }
   .intro-text{ font-size:13.5px; color:var(--muted); line-height:1.8; margin-bottom:8px; }
-  .placeholder-note{ display:inline-block; font-size:11.5px; color:var(--gold); background:rgba(212,175,55,0.1); border:1px dashed var(--line); border-radius:6px; padding:8px 10px; line-height:1.6; }
+  .placeholder-note{ display:inline-block; font-size:11.5px; color:var(--gold); background:rgba(184,92,52,0.1); border:1px dashed var(--line); border-radius:6px; padding:8px 10px; line-height:1.6; }
   .reframe{ font-family:'Noto Serif TC', serif; font-size:16px; font-weight:700; color:var(--text); margin:24px 0; line-height:1.7; }
   .unify-q{ font-size:13.5px; color:var(--muted); margin:22px 0; line-height:1.8; }
   .unify-q b{ color:var(--gold-bright); font-family:'Noto Serif TC',serif; }
@@ -91,7 +92,7 @@
   .reward-stack li b{ color:var(--gold-bright); }
 
   .honesty-protocol{ background:var(--maroon-2); border:1px dashed var(--line); border-radius:10px; padding:18px 20px; }
-  .honesty-protocol .hp-title{ display:flex; align-items:center; gap:6px; font-family:'Space Mono',monospace; font-size:11px; color:var(--gold); letter-spacing:0.1em; margin-bottom:10px; }
+  .honesty-protocol .hp-title{ display:flex; align-items:center; gap:6px; font-family:'Space Mono',monospace; font-size:11px; color:var(--olive); letter-spacing:0.1em; margin-bottom:10px; }
   .honesty-protocol .hp-icon{ display:flex; }
   .honesty-protocol p{ font-size:13px; color:var(--muted); margin-bottom:6px; line-height:1.7; }
   .honesty-protocol p:last-child{ margin-bottom:0; }
@@ -100,11 +101,11 @@
 
   .btn{
     display:inline-flex; align-items:center; justify-content:center; gap:8px;
-    background:linear-gradient(180deg, var(--gold-bright), var(--gold)); color:#2B1400; font-weight:700; font-size:15px;
+    background:linear-gradient(180deg, var(--gold-bright), var(--gold)); color:#FBF6EC; font-weight:700; font-size:15px;
     border:none; border-radius:6px; padding:15px 28px; cursor:pointer;
     width:100%; transition:transform 0.15s ease, box-shadow 0.15s ease;
   }
-  .btn:hover{ transform:translateY(-1px); box-shadow:0 10px 24px -8px rgba(212,175,55,0.55); }
+  .btn:hover{ transform:translateY(-1px); box-shadow:0 10px 24px -8px rgba(184,92,52,0.55); }
   .btn:active{ transform:translateY(0); }
   .btn.ghost{ background:transparent; color:var(--text); border:1px solid var(--line); font-weight:500; }
   .btn.ghost:hover{ border-color:var(--gold); box-shadow:none; }
@@ -122,13 +123,13 @@
     display:flex; align-items:center; gap:12px; transition:border-color 0.15s, background 0.15s;
   }
   .opt-meter{ display:flex; gap:3px; flex-shrink:0; width:44px; }
-  .opt-meter .dot{ width:6px; height:6px; border-radius:50%; background:var(--line); flex-shrink:0; }
-  .opt-meter .dot.filled{ background:var(--gold); }
+  .opt-meter .dot{ width:6px; height:6px; border-radius:50%; background:var(--muted); opacity:0.35; flex-shrink:0; }
+  .opt-meter .dot.filled{ background:var(--gold); opacity:1; }
   .opt-label{ flex:1; }
   .q-dim-wrap{ display:inline-flex; align-items:center; gap:5px; }
   .q-dim-icon{ display:flex; color:var(--gold); }
   .q-dim-icon svg{ display:block; }
-  .opt:hover{ border-color:var(--gold); background:#552027; }
+  .opt:hover{ border-color:var(--gold); background:#E7DCC0; }
 
   #screen-loading{ text-align:center; padding:70px 32px; }
   .spinner{ width:52px; height:52px; margin:0 auto 24px; border-radius:50%; border:3px solid var(--line); border-top-color:var(--gold); animation:spin 0.9s linear infinite; }
@@ -142,13 +143,13 @@
     font-family:'Noto Serif TC',serif; font-weight:900; font-size:32px; color:var(--gold-bright);
     background:radial-gradient(circle at 35% 30%, var(--maroon-2), var(--maroon));
     border:2px solid var(--gold);
-    box-shadow:0 0 0 4px rgba(212,175,55,0.12) inset, 0 4px 14px rgba(0,0,0,0.4);
+    box-shadow:0 0 0 4px rgba(184,92,52,0.12) inset, 0 4px 14px rgba(60,45,25,0.15);
   }
   .tier-badge{
     display:inline-block; font-family:'Noto Serif TC',serif; font-size:13px; letter-spacing:0.15em;
     color:var(--gold-bright); background:radial-gradient(circle at 35% 30%, var(--vermilion), #6E1A17);
     border:2px solid var(--gold); border-radius:8px; padding:8px 18px; margin-bottom:12px; font-weight:900;
-    transform:rotate(-2deg); box-shadow:0 4px 10px rgba(0,0,0,0.45);
+    transform:rotate(-2deg); box-shadow:0 4px 10px rgba(60,45,25,0.2);
   }
   .tier-dots{ display:flex; justify-content:center; gap:6px; margin-bottom:18px; }
   .tier-dots .tier-dot{ width:8px; height:8px; border-radius:50%; background:var(--maroon-2); border:1px solid var(--line); }
@@ -186,13 +187,13 @@
 
     <div class="hero-radar" aria-hidden="true">
       <svg viewBox="0 0 120 120" width="112" height="112">
-        <polygon points="60,10 105,45 88,100 32,100 15,45" fill="rgba(212,175,55,0.05)" stroke="var(--line)" stroke-width="1"/>
-        <polygon points="60,34 87,53 77,88 43,88 33,53" fill="none" stroke="rgba(212,175,55,0.4)" stroke-width="1"/>
-        <line x1="60" y1="60" x2="60" y2="10" stroke="rgba(212,175,55,0.15)" stroke-width="1"/>
-        <line x1="60" y1="60" x2="105" y2="45" stroke="rgba(212,175,55,0.15)" stroke-width="1"/>
-        <line x1="60" y1="60" x2="88" y2="100" stroke="rgba(212,175,55,0.15)" stroke-width="1"/>
-        <line x1="60" y1="60" x2="32" y2="100" stroke="rgba(212,175,55,0.15)" stroke-width="1"/>
-        <line x1="60" y1="60" x2="15" y2="45" stroke="rgba(212,175,55,0.15)" stroke-width="1"/>
+        <polygon points="60,10 105,45 88,100 32,100 15,45" fill="rgba(184,92,52,0.05)" stroke="var(--line)" stroke-width="1"/>
+        <polygon points="60,34 87,53 77,88 43,88 33,53" fill="none" stroke="rgba(184,92,52,0.4)" stroke-width="1"/>
+        <line x1="60" y1="60" x2="60" y2="10" stroke="rgba(184,92,52,0.15)" stroke-width="1"/>
+        <line x1="60" y1="60" x2="105" y2="45" stroke="rgba(184,92,52,0.15)" stroke-width="1"/>
+        <line x1="60" y1="60" x2="88" y2="100" stroke="rgba(184,92,52,0.15)" stroke-width="1"/>
+        <line x1="60" y1="60" x2="32" y2="100" stroke="rgba(184,92,52,0.15)" stroke-width="1"/>
+        <line x1="60" y1="60" x2="15" y2="45" stroke="rgba(184,92,52,0.15)" stroke-width="1"/>
         <circle cx="60" cy="10" r="2.6" fill="var(--gold)"/>
         <circle cx="105" cy="45" r="2.6" fill="var(--gold)"/>
         <circle cx="88" cy="100" r="2.6" fill="var(--gold)"/>
@@ -203,7 +204,7 @@
 
     <div class="intro-block">
       <p class="intro-text">這份診斷，改編自劉奕酉老師《被認可的努力》一書。</p>
-      <p class="placeholder-note">〔這裡預留一段作者資歷／代表案例，用來建立可信度〕</p>
+      <p class="placeholder-note">〔這裡預留一段作者資歷／代表案例，用來建立可信度——需要你提供真實內容，我不會替你編造〕</p>
     </div>
 
     <p class="reframe">這不是在測你努不努力，<br>而是在測——你的努力，有沒有被兌現的能力。</p>
@@ -223,19 +224,19 @@
     <div class="exclusivity">
       <div class="ex-title">⚠ 提醒：這份診斷不是給每個人的。</div>
       <div class="ex-row good">
-        <b>適合，如果你——</b>
+        <b>適合你，如果——</b>
         <ul>
           <li>拚命工作，卻總覺得功勞被別人拿走</li>
           <li>開始懷疑「認真做事」跟「被看見」根本是兩件事</li>
-          <li>發現，光靠苦幹實幹，換不到你要的位置</li>
+          <li>終於承認，光靠苦幹實幹，換不到你要的位置</li>
         </ul>
       </div>
       <div class="ex-row bad">
-        <b>勸退，如果你——</b>
+        <b>勸退你，如果——</b>
         <ul>
           <li>只想聽勵志故事，這裡沒有雞湯</li>
           <li>不想面對真實落差，這裡沒有安慰劑</li>
-          <li>還相信「只要夠努力，老闆總有一天會看到」——這份診斷會戳破這個念想</li>
+          <li>還相信「只要夠努力，主子總有一天會看到」——這份診斷會戳破這個念想</li>
         </ul>
       </div>
     </div>
@@ -248,7 +249,7 @@
         <li><span class="rs-icon"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19V11M12 19V5M19 19V14"/></svg></span><b>努力兌現分數</b>——0～75 分，一眼看出你現在的處境</li>
         <li><span class="rs-icon"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><polygon points="12,4 19,9.5 16.5,18 7.5,18 5,9.5"/></svg></span><b>五維度雷達圖</b>——你以為的弱點，可能根本不是重點</li>
         <li><span class="rs-icon"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 12.2L12.2 3.5H20.5V11.8L11.8 20.5L3.5 12.2Z"/><circle cx="16" cy="8" r="1.3" fill="currentColor" stroke="none"/></svg></span><b>職場瓶頸類型標籤</b>——沉默的公牛／職場未爆彈／深山的專家／勤奮打雜王</li>
-        <li><span class="rs-icon"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="12" r="2.2"/><circle cx="18" cy="6" r="2.2"/><circle cx="18" cy="18" r="2.2"/><path d="M8 10.8L16 7M8 13.2L16 17"/></svg></span>可直接分享或下載的診斷圖卡，領取新書優惠的 QR Code</li>
+        <li><span class="rs-icon"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="12" r="2.2"/><circle cx="18" cy="6" r="2.2"/><circle cx="18" cy="18" r="2.2"/><path d="M8 10.8L16 7M8 13.2L16 17"/></svg></span>可直接分享或下載的診斷圖卡，附一組領取新書優惠的 QR Code</li>
       </ul>
     </div>
 
@@ -257,11 +258,10 @@
     <div class="honesty-protocol">
       <div class="hp-title"><span class="hp-icon"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><path d="M12 7v5l3.5 3.5"/></svg></span>誠實協議</div>
       <p>這份測驗沒有及格分數，也不必討好任何人。</p>
-      <p>如果某一題你猶豫超過 5 秒才選——那通常就是，你正在迴避你心裡最真誠的答案。</p>
-      <p>請相信自己的直覺，憑直覺作答。</p>
+      <p>如果某一題你猶豫超過 5 秒才選——那通常就是最誠實的答案。</p>
     </div>
 
-    <p class="logistics">約 90 秒 · 15 題 · 完全免費 · 不需要留任何個資</p>
+    <p class="logistics">約 90 秒 · 15 題 · 完全免費 · 不需要留下任何個資</p>
 
     <button class="btn" onclick="startQuiz()">開始診斷 →</button>
     <p class="fine" style="margin-top:10px;">誠實作答，比答對更重要。</p>
@@ -319,67 +319,55 @@ const CONFIG = {
   AD_COPY: '高效顧問劉奕酉老師，最近剛好有限時優惠名額。'   // TODO: 確認後可再調整文案細節
 };
 
-/* ---------------- 題庫：5 維度 x 3 題，每題各自的選項文案 ---------------- */
+/* ---------------- 統一選項量表：不符合 ～ 符合 ---------------- */
+const OPT_LABELS = ['完全不符合','不符合','普通','符合','非常符合'];
+
+/* ---------------- 題庫：5 維度 x 3 題 ---------------- */
 const QUESTIONS = [
   {dim:'對位力', key:'align',
-   text:'你能清楚說出目前最重要的三個目標，而且大部分工作時間都花在這些事情上。',
-   opts:['沒辦法','只想到一個','我要想很久','應該可以...但還少一個','我現在就有想法!']},
+   text:'你能清楚說出目前最重要的三個目標，而且大部分工作時間都花在這些事情上。'},
 
   {dim:'對位力', key:'align',
-   text:'面對不同的決策者，你會準備不同版本的溝通方式來說服對方。',
-   opts:['我始終如一!絕不轉彎','不太會~','看心情','很多情況下，會','每次事前都要演練很多次!']},
+   text:'面對不同的決策者，你會準備不同版本的溝通方式來說服對方。'},
 
   {dim:'對位力', key:'align',
-   text:'你懂得婉拒（或低標完成）那些對目標沒貢獻、卻很耗你精力的雜事。',
-   opts:['來都來了、做都做了......','通常不會想到這個','要看情況ㄟ','應付過關就好~認真就輸了~','斤斤計較CP值是我的優點!']},
+   text:'你懂得婉拒（或低標完成）那些對目標沒貢獻、卻很耗你精力的雜事。'},
 
   {dim:'轉譯力', key:'trans',
-   text:'不管口頭或書面，你都能在一分鐘內講清楚一件事的背景、行動與結果。',
-   opts:['怎麼可能講得清楚!','待本宮好好想想......','要看情況吧!','大多可以~','人家都說我是行走的AI!!!']},
+   text:'不管口頭或書面，你都能在一分鐘內講清楚一件事的背景、行動與結果。'},
 
   {dim:'轉譯力', key:'trans',
-   text:'不管是自己寫還是叫AI生成，你交出去的東西永遠能讓對方一眼抓到重點在哪。',
-   opts:['丟出去對方常常回「所以重點是?」','連我自己回頭看都要想一下重點','看有沒有空整理，沒空就算了','大多時候抓得到，偶爾會被問','三秒定生死，重點永遠在最上面!']},
+   text:'不管是自己寫還是叫AI生成，你交出去的東西永遠能讓對方一眼抓到重點在哪。'},
 
   {dim:'轉譯力', key:'trans',
-   text:'遇到突發狀況，你能把它包裝成「這件事需要專業才能解決」，而不只是麻煩。',
-   opts:['你行你上吧，我先躺著','通常不會...做得很累...','要看什麼事吧~','會啦會啦我還是(應該)會做啦','全力以赴!革命十一次!']},
+   text:'遇到突發狀況，你能把它包裝成「這件事需要專業才能解決」，而不只是麻煩。'},
 
   {dim:'信任力', key:'trust',
-   text:'你回報進度時，會清楚說出「下一步」具體的時間與行動。',
-   opts:['"下一步"是什麼?','想到的時候，會','要看情況ㄟ~','這不是該問的嗎?','一定要問的啊!乾脆放在簽名檔?']},
+   text:'你回報進度時，會清楚說出「下一步」具體的時間與行動。'},
 
   {dim:'信任力', key:'trust',
-   text:'專案卡關時，你會在被問之前，就主動帶著解決方案去同步進度。',
-   opts:['還有這招?!從沒想過','如果我有辦法再說......','要看什麼事情吧~','總要找到藉口啊!','連負荊請罪都要先準備藤條了!!!']},
+   text:'專案卡關時，你會在被問之前，就主動帶著解決方案去同步進度。'},
 
   {dim:'信任力', key:'trust',
-   text:'即使出了大差錯，你的回報依然專注於止血方案，而不是找藉口。',
-   opts:['第一時間先想好推託話術','腦筋一片空白只想裝死','先看是誰的鍋再說','會硬著頭皮先端出解法','出包現場我最穩，解法比道歉快!']},
+   text:'即使出了大差錯，你的回報依然專注於止血方案，而不是找藉口。'},
 
   {dim:'槓桿力', key:'lever',
-   text:'你曾把自己的成功經驗整理成方法或範本，讓別人也能複製同樣成果。',
-   opts:['江湖一點訣，我才不告訴你','從沒想過要寫下來','心情好會口頭教一下','會整理個大概，堪用就好','我的SOP已經是團隊聖經了!']},
+   text:'你曾把自己的成功經驗整理成方法或範本，讓別人也能複製同樣成果。'},
 
   {dim:'槓桿力', key:'lever',
-   text:'你常常是不同角色或部門之間的橋樑，能把彼此的語言翻譯給對方聽。',
-   opts:['他們吵他們的，關我什麼事','光聽都要靠翻譯蒟蒻了','看場合，能躲就躲','常常被抓去當夾心餅乾翻譯','沒有我，這場會議根本開不完!']},
+   text:'你常常是不同角色或部門之間的橋樑，能把彼此的語言翻譯給對方聽。'},
 
   {dim:'槓桿力', key:'lever',
-   text:'因為有你在，團隊整體的回報品質與專業形象都明顯提升。',
-   opts:['我拖累大家還差不多','應該感覺不太出來','偶爾被稱讚一下下','大家開始會先讓我把關再送出','我在，主管才敢閉眼交差!']},
+   text:'因為有你在，團隊整體的回報品質與專業形象都明顯提升。'},
 
   {dim:'品牌力', key:'brand',
-   text:'遇到某一類特定問題，大家第一個想到的就是你。',
-   opts:['大家想到我通常是要推卸責任','應該沒什麼存在感','某幾個人偶爾會想到我','固定幾類問題已經被貼上我的名字','那個問題找OOO，全公司都這樣說!']},
+   text:'遇到某一類特定問題，大家第一個想到的就是你。'},
 
   {dim:'品牌力', key:'brand',
-   text:'你衡量一件事的價值，看的是難度與影響力，而不是花了多少時間。',
-   opts:['準時打卡下班比較重要','習慣用工時衡量自己','看當下比較想聽哪個','會提醒自己往影響力想','時數是假的，解決了什麼才是真的!']},
+   text:'你衡量一件事的價值，看的是難度與影響力，而不是花了多少時間。'},
 
   {dim:'品牌力', key:'brand',
-   text:'即使組織或環境變動，你的專業標籤仍然讓你在市場上具競爭力。',
-   opts:['離開這裡我什麼都不是','換個環境大概要重新來過','看新環境賞不賞臉','履歷拿出去還算有東西可以講','走到哪都有人搶著要，標籤就是我的護城河!']}
+   text:'即使組織或環境變動，你的專業標籤仍然讓你在市場上具競爭力。'}
 ];
 
 const DIM_ORDER = ['align','trans','trust','lever','brand'];
@@ -421,7 +409,7 @@ function renderQuestion(){
 
   const wrap = document.getElementById('q-opts');
   wrap.innerHTML = '';
-  q.opts.forEach((label, i)=>{
+  OPT_LABELS.forEach((label, i)=>{
     const btn = document.createElement('button');
     btn.className = 'opt';
     let dots = '';
@@ -492,7 +480,7 @@ function drawRadar(canvasId, scores){
 
   ctx.clearRect(0,0,W,H);
 
-  ctx.strokeStyle = 'rgba(240,203,99,0.10)';
+  ctx.strokeStyle = 'rgba(58,48,34,0.10)';
   ctx.lineWidth = 1;
   for(let ring=1; ring<=4; ring++){
     ctx.beginPath();
@@ -504,14 +492,14 @@ function drawRadar(canvasId, scores){
     }
     ctx.stroke();
   }
-  ctx.fillStyle = '#B79C7A';
+  ctx.fillStyle = '#8A7F68';
   ctx.font = '11px "Space Mono", monospace';
   ctx.textAlign = 'center';
   for(let i=0;i<N;i++){
     const ang = -Math.PI/2 + i*(2*Math.PI/N);
     const x2 = cx + R*Math.cos(ang), y2 = cy + R*Math.sin(ang);
     ctx.beginPath(); ctx.moveTo(cx,cy); ctx.lineTo(x2,y2);
-    ctx.strokeStyle = 'rgba(240,203,99,0.10)'; ctx.stroke();
+    ctx.strokeStyle = 'rgba(58,48,34,0.10)'; ctx.stroke();
     const lx = cx + (R+22)*Math.cos(ang), ly = cy + (R+22)*Math.sin(ang);
     ctx.fillText(DIM_LABEL[DIM_ORDER[i]], lx, ly+4);
   }
@@ -523,8 +511,8 @@ function drawRadar(canvasId, scores){
     i===0 ? ctx.moveTo(x,y) : ctx.lineTo(x,y);
   });
   ctx.closePath();
-  ctx.fillStyle = 'rgba(212,175,55,0.22)';
-  ctx.strokeStyle = '#D4AF37';
+  ctx.fillStyle = 'rgba(184,92,52,0.22)';
+  ctx.strokeStyle = '#B85C34';
   ctx.lineWidth = 2.2;
   ctx.fill(); ctx.stroke();
 
@@ -533,7 +521,7 @@ function drawRadar(canvasId, scores){
     const r = R * (scores[k]/max);
     const x = cx + r*Math.cos(ang), y = cy + r*Math.sin(ang);
     ctx.beginPath(); ctx.arc(x,y,3.5,0,2*Math.PI);
-    ctx.fillStyle = '#D4AF37'; ctx.fill();
+    ctx.fillStyle = '#B85C34'; ctx.fill();
   });
 }
 
@@ -577,41 +565,41 @@ async function shareCard(){
   const ctx = card.getContext('2d');
 
   const grad = ctx.createLinearGradient(0,0,0,H);
-  grad.addColorStop(0,'#2A0D10'); grad.addColorStop(1,'#150506');
+  grad.addColorStop(0,'#F6F1E4'); grad.addColorStop(1,'#EDE4D0');
   ctx.fillStyle = grad; ctx.fillRect(0,0,W,H);
 
-  ctx.fillStyle = '#D4AF37';
+  ctx.fillStyle = '#B85C34';
   ctx.font = '700 13px "Space Mono", monospace';
   ctx.textAlign = 'center';
   ctx.fillText('努力顯化系統・自我診斷', W/2, 56);
 
-  ctx.fillStyle = '#F0CB63';
+  ctx.fillStyle = '#8C4527';
   ctx.font = '900 30px "Noto Serif TC", serif';
   ctx.fillText(shapeResult.shape.name, W/2, 104);
 
-  ctx.fillStyle = '#B79C7A';
+  ctx.fillStyle = '#8A7F68';
   ctx.font = '13px "Noto Sans TC", sans-serif';
   ctx.fillText(shapeResult.tier.name + '　' + total(scores) + ' / 75 分', W/2, 130);
 
   ctx.drawImage(srcCanvas, (W-300)/2, 160, 300, 300);
 
-  ctx.fillStyle = '#F2E6CE';
+  ctx.fillStyle = '#2B2620';
   ctx.font = '13px "Noto Sans TC", sans-serif';
   wrapText(ctx, shapeResult.shape.desc, W/2, 500, 460, 20);
 
   // 分隔線
-  ctx.strokeStyle = 'rgba(212,175,55,0.2)';
+  ctx.strokeStyle = 'rgba(184,92,52,0.2)';
   ctx.beginPath(); ctx.moveTo(70, 595); ctx.lineTo(W-70, 595); ctx.stroke();
 
   // 低調帶入（保留極小的 AD 標示以維持誠實揭露，但不做成醒目色塊）
-  ctx.fillStyle = 'rgba(183,156,122,0.55)';
+  ctx.fillStyle = 'rgba(138,127,104,0.55)';
   ctx.font = '700 9px "Space Mono", monospace';
   ctx.fillText('AD', W/2, 622);
-  ctx.fillStyle = '#B79C7A';
+  ctx.fillStyle = '#8A7F68';
   ctx.font = '12px "Noto Sans TC", sans-serif';
   wrapText(ctx, CONFIG.AD_COPY, W/2, 645, 460, 19);
 
-  ctx.fillStyle = '#B79C7A';
+  ctx.fillStyle = '#8A7F68';
   ctx.font = '11px "Space Mono", monospace';
   ctx.fillText('#被認可的努力　#努力顯化雷達圖', W/2, H-30);
 
