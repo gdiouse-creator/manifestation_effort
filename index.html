@@ -445,6 +445,14 @@ function finishQuiz(){
 
 function total(scores){ return DIM_ORDER.reduce((s,k)=>s+scores[k],0); }
 
+const SHAPES = {
+  bull:     {name:'沉默的公牛', glyph:'牛', desc:'你很可靠，但不擅長說故事。建議提升轉譯力，別讓功勞死在沉默裡。'},
+  bomb:     {name:'職場未爆彈', glyph:'彈', desc:'你很會包裝，但交付不穩定。培養信任力是你的當下任務——信任才是認可的續航力。'},
+  hermit:   {name:'深山的專家', glyph:'山', desc:'你很強，但跟公司目標脫節。建議改善對位力，再好的人才也需要對的舞台。'},
+  jack:     {name:'勤奮打雜王', glyph:'雜', desc:'你選對路子且回報穩定，但還在靠單打獨鬥。建議培養槓桿力，學會賦能，才能換取自由。'},
+  balanced: {name:'全面發展中', glyph:'全', desc:'你的五個維度沒有明顯短板，接下來的重點是把每一項都推向更高的匯率。'}
+};
+
 function computeShape(scores){
   const t = total(scores); // 15~75
   let tier;
@@ -453,18 +461,35 @@ function computeShape(scores){
   else if(t>=33) tier = {name:'苦勞累積者', level:2, desc:'努力大於認可，正處於「職場貶值」邊緣，需立即轉向顯化思維。'};
   else tier = {name:'隱形邊緣人', level:1, desc:'價值被嚴重低估或忽略，面臨隨時被稀釋與捨棄的風險。'};
 
-  const hi = k=>scores[k]>=11, lo = k=>scores[k]<=7;
+  // 高/低改用「相對於自己五維度平均值」判定，取代固定絕對分數線，
+  // 讓判定更貼近每個人自己的相對強弱，減少落入中間地帶的機率
+  const avg = t/5;
+  const hi = k=>scores[k] > avg;
+  const lo = k=>scores[k] < avg;
+
   let shape;
   if(hi('trust') && (lo('trans')||lo('brand'))){
-    shape = {name:'沉默的公牛', glyph:'牛', desc:'你很可靠，但不擅長說故事。建議提升轉譯力，別讓功勞死在沉默裡。'};
+    shape = SHAPES.bull;
   } else if(hi('trans') && hi('lever') && lo('trust')){
-    shape = {name:'職場未爆彈', glyph:'彈', desc:'你很會包裝，但交付不穩定。培養信任力是你的當下任務——信任才是認可的續航力。'};
+    shape = SHAPES.bomb;
   } else if(hi('brand') && (lo('align')||lo('trust'))){
-    shape = {name:'深山的專家', glyph:'山', desc:'你很強，但跟公司目標脫節。建議改善對位力，再好的人才也需要對的舞台。'};
+    shape = SHAPES.hermit;
   } else if(hi('align') && hi('trust') && (lo('lever')||lo('brand'))){
-    shape = {name:'勤奮打雜王', glyph:'雜', desc:'你選對路子且回報穩定，但還在靠單打獨鬥。建議培養槓桿力，學會賦能，才能換取自由。'};
+    shape = SHAPES.jack;
   } else {
-    shape = {name:'全面發展中', glyph:'全', desc:'你的五個維度沒有明顯短板，接下來的重點是把每一項都推向更高的匯率。'};
+    // 四種書中定義的組合都沒對上時，改看「最突出的單一維度」，
+    // 歸類到邏輯上最接近的那一種，而不是直接丟進「全面發展中」
+    const sorted = DIM_ORDER.slice().sort((a,b)=>scores[b]-scores[a]);
+    const allEqual = sorted.every(k=>scores[k]===scores[sorted[0]]);
+    if(allEqual){
+      shape = SHAPES.balanced; // 五維度完全同分，才會出現這個結果
+    } else {
+      const top = sorted[0];
+      if(top === 'trust') shape = SHAPES.bull;
+      else if(top === 'brand') shape = SHAPES.hermit;
+      else if(top === 'align') shape = SHAPES.jack;
+      else shape = SHAPES.bomb; // trans 或 lever 最突出
+    }
   }
   return {tier, shape};
 }
